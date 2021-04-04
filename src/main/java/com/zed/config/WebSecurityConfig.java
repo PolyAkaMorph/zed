@@ -1,5 +1,6 @@
 package com.zed.config;
 
+import com.zed.model.Role;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -35,7 +36,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 User.withDefaultPasswordEncoder()
                         .username("1")
                         .password("1")
-                        .roles("USER")
+                        .roles(Role.USER.name())
                         .build();
 
         return new InMemoryUserDetailsManager(user);
