@@ -7,8 +7,8 @@ USER - таблица с пользователями
     last_login_date
     role
 ---------------------------------------
-PERSONAL - таблица с личными данными пользователя
-    personal_id PK
+PERSON - таблица с личными данными пользователя
+    person_id PK
     user_id FK
     name
     surname
@@ -19,10 +19,56 @@ PERSONAL - таблица с личными данными пользовате�
 ---------------------------------------
 FRIENDSHIP (is magic) - таблица с дружественными связями пользователей, one-to-many
     friendship_id PK
-    personal_id FK
-    friend_personal_id FK
+    person_id FK
+    friend_person_id FK
     friendship_date
 ---------------------------------------
+create schema social;
 
+CREATE TABLE `social`.`user` (
+  `user_id` INT NOT NULL AUTO_INCREMENT,
+  `login` VARCHAR(255) NOT NULL,
+  `password_hash` VARCHAR(32) NOT NULL,
+  `registration_date` DATETIME NOT NULL,
+  `last_login_date` DATETIME NOT NULL,
+  `role` VARCHAR(32) NOT NULL,
+  PRIMARY KEY (`user_id`),
+  UNIQUE INDEX `password_hash_UNIQUE` (`password_hash` ASC) VISIBLE);
+
+CREATE TABLE `social`.`person` (
+  `person_id` INT NOT NULL AUTO_INCREMENT,
+  `user_id` INT NOT NULL,
+  `name` VARCHAR(225) NULL,
+  `surname` VARCHAR(225) NULL,
+  `age` INT NULL,
+  `sex` VARCHAR(45) NULL,
+  `interests` VARCHAR(225) NULL,
+  `city` VARCHAR(45) NULL,
+  PRIMARY KEY (`person_id`),
+  INDEX `user_id_idx` (`user_id` ASC) VISIBLE,
+  CONSTRAINT `user_id`
+    FOREIGN KEY (`user_id`)
+    REFERENCES `social`.`user` (`user_id`)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE);
+
+CREATE TABLE `social`.`friendship` (
+  `friendship_id` INT NOT NULL AUTO_INCREMENT,
+  `person_id` INT NOT NULL,
+  `friend_person_id` INT NOT NULL,
+  `friendship_date` DATETIME NOT NULL,
+  PRIMARY KEY (`friendship_id`),
+  INDEX `person_id_idx` (`person_id` ASC) VISIBLE,
+  INDEX `friend_person_id_idx` (`friend_person_id` ASC) VISIBLE,
+  CONSTRAINT `person_id`
+    FOREIGN KEY (`person_id`)
+    REFERENCES `social`.`person` (`person_id`)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE,
+  CONSTRAINT `friend_person_id`
+    FOREIGN KEY (`friend_person_id`)
+    REFERENCES `social`.`person` (`person_id`)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE);
 
 ---------------------------------------
