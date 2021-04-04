@@ -1,0 +1,27 @@
+---------------------------------------
+USER - таблица с пользователями
+    user_id PK
+    login
+    password_hash INDEX
+    registration_date
+    last_login_date
+---------------------------------------
+PERSONAL - таблица с личными данными пользователя
+    personal_id PK
+    user_id FK
+    name
+    surname
+    age
+    sex
+    interests (must be FK to another table)
+    city (must be FK to another table-reference book)
+---------------------------------------
+FRIENDSHIP (is magic) - таблица с дружественными связями пользователей, one-to-many
+    friendship_id PK
+    user_id FK
+    friend_user_id FK
+    friendship_date
+---------------------------------------
+
+
+---------------------------------------
