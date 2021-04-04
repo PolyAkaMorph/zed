@@ -5,6 +5,7 @@ USER - таблица с пользователями
     password_hash INDEX
     registration_date
     last_login_date
+    role
 ---------------------------------------
 PERSONAL - таблица с личными данными пользователя
     personal_id PK
@@ -18,8 +19,8 @@ PERSONAL - таблица с личными данными пользовате�
 ---------------------------------------
 FRIENDSHIP (is magic) - таблица с дружественными связями пользователей, one-to-many
     friendship_id PK
-    user_id FK
-    friend_user_id FK
+    personal_id FK
+    friend_personal_id FK
     friendship_date
 ---------------------------------------
 
