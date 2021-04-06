@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org"
+      xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+<head>
+    <meta charset="UTF-8">
+    <title>Personal</title>
+</head>
+<body>
+<h1>Your name is %NAME%</h1>
+<h1>Your surname is %SURNAME%</h1>
+<h1>Your age is %AGE%</h1>
+<h1>Your sex is %SEX%</h1>
+<h1>Your interests are %INTERESTS%</h1>
+<h1>Your city is %CITY%</h1>
+
+<p>Click <a th:href="@{/person}">here</a> to go back to your personal page.</p>
+<p>Click <a th:href="@{/friends}">here</a> to see your friends.</p>
+<p>Click <a th:href="@{/all}">here</a> to see all the people.</p>
+
+</body>
+</html>

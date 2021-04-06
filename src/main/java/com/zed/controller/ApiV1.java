@@ -1,42 +1,40 @@
 package com.zed.controller;
 
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
 
 @Slf4j
-@RestController
+@Controller
 public class ApiV1 {
-    @RequestMapping("/api/v1/")
-    public String entry() {
-        log.debug("entry");
-        log.error("entry");
-        log.info("entry");
-        return "entry";
-    }
-
-    @RequestMapping("/api/v1/register")
-    public String register() {
-        return "register";
-    }
-
-    @RequestMapping("/api/v1/me")
-    public String me() {
-        return "me";
-    }
-
-    @RequestMapping("/api/v1/all")
-    public String all() {
+    @GetMapping("/all")
+    public String getAll(Model model) {
+        model.addAttribute("test", "test");
         return "all";
     }
 
-    @RequestMapping("/api/v1/friends")
-    public String friends() {
+    @GetMapping("/friends")
+    public String getFriends(Model model) {
+        model.addAttribute("test", "test");
         return "friends";
     }
 
-    @RequestMapping("/api/v1/edit")
-    public String edit() {
+    @GetMapping("/friend")
+    public String getFriend(Model model) {
+        model.addAttribute("test", "test");
+        return "friend";
+    }
+
+    @GetMapping("/person")
+    public String getPerson(Model model) {
+        model.addAttribute("test", "test");
+        return "person";
+    }
+
+    @GetMapping("/edit")
+    public String getEdit(Model model) {
+        model.addAttribute("test", "test");
         return "edit";
     }
 
