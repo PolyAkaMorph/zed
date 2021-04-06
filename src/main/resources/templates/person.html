@@ -7,12 +7,12 @@
 </head>
 <body>
 <p>Click <a th:href="@{/edit}">here</a> to edit your page.</p>
-<h1>Your name is %NAME%</h1>
-<h1>Your surname is %SURNAME%</h1>
-<h1>Your age is %AGE%</h1>
-<h1>Your sex is %SEX%</h1>
-<h1>Your interests are %INTERESTS%</h1>
-<h1>Your city is %CITY%</h1>
+<div th:text="'Your name is ' + ${name}"></div>
+<div th:text="'Your surname is ' + ${surname}"></div>
+<div th:text="'Your age is ' + ${age}"></div>
+<div th:text="'Your sex is ' + ${sex}"></div>
+<div th:text="'Your interests are ' + ${interests}"></div>
+<div th:text="'Your city is  ' + ${city}"></div>
 
 <p>Click <a th:href="@{/friends}">here</a> to see your friends.</p>
 <p>Click <a th:href="@{/all}">here</a> to see all the people.</p>

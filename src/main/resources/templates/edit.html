@@ -6,14 +6,19 @@
     <title>Personal</title>
 </head>
 <body>
-<h1>Your name is %NAME%</h1>
-<h1>Your surname is %SURNAME%</h1>
-<h1>Your age is %AGE%</h1>
-<h1>Your sex is %SEX%</h1>
-<h1>Your interests are %INTERESTS%</h1>
-<h1>Your city is %CITY%</h1>
-
 <p>Click <a th:href="@{/person}">here</a> to go back to your personal page.</p>
+
+<form action="#" th:action="@{/edit-submit}" th:object="${personinfo}" method="post">
+    <p>Name: <input type="text" th:field="*{name}" /></p>
+    <p>Surname: <input type="text" th:field="*{surname}" /></p>
+    <p>Age: <input type="text" th:field="*{age}" /></p>
+    <p>Sex: <input type="text" th:field="*{sex}" /></p>
+    <p>Interests: <input type="text" th:field="*{interests}" /></p>
+    <p>City: <input type="text" th:field="*{city}" /></p>
+    <p><input type="submit" value="Submit" /> <input type="reset" value="Reset" /></p>
+</form>
+
+
 <p>Click <a th:href="@{/friends}">here</a> to see your friends.</p>
 <p>Click <a th:href="@{/all}">here</a> to see all the people.</p>
 
