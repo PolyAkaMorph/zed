@@ -1,9 +1,12 @@
 package com.zed.dto;
 
-import com.zed.model.Sex;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class PersonInfo {
     protected String name;
     protected String surname;

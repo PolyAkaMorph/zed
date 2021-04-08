@@ -12,4 +12,8 @@ public class RegistrationInfo {
     protected String sex;
     protected String interests;
     protected String city;
+
+    public PersonInfo getPersonInfo() {
+        return new PersonInfo(name, surname, age, sex, interests, city);
+    }
 }

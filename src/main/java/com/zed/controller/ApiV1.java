@@ -2,7 +2,9 @@ package com.zed.controller;
 
 import com.zed.dto.PersonInfo;
 import com.zed.dto.RegistrationInfo;
+import com.zed.service.UserService;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -12,6 +14,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 @Slf4j
 @Controller
 public class ApiV1 {
+    @Autowired
+    UserService userService;
+
     @GetMapping("/person")
     public String getPerson(Model model) {
         model.addAttribute("name", "Nikola");
@@ -45,8 +50,9 @@ public class ApiV1 {
     @PostMapping("/registration-submit")
     public String registrationSubmit(@ModelAttribute RegistrationInfo registrationInfo, Model model) {
         model.addAttribute(registrationInfo);
+        userService.register(registrationInfo);
         //REGISTER? https://www.baeldung.com/registration-with-spring-mvc-and-spring-security
-        return "redirect:/person";
+        return "redirect:/login";
     }
 
     @GetMapping("/all")
@@ -66,8 +72,5 @@ public class ApiV1 {
         model.addAttribute("test", "test");
         return "friend";
     }
-
-
-
 }
 
