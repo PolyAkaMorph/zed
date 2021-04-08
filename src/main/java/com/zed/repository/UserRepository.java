@@ -7,7 +7,7 @@ import java.util.List;
 public interface UserRepository {
     User save(User user);
     User getByKey(Integer userId);
-    User getByHash(String passwordHash);
+    User getByLoginAndHash(String login, String passwordHash);
     List<User> getAllUsers();
     boolean delete(User user);
 

@@ -1,6 +1,7 @@
 package com.zed.controller;
 
 import com.zed.dto.PersonInfo;
+import com.zed.dto.RegistrationInfo;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -32,6 +33,19 @@ public class ApiV1 {
     public String editSubmit(@ModelAttribute PersonInfo personInfo, Model model) {
         model.addAttribute(personInfo);
         log.debug(personInfo.getAge());
+        return "redirect:/person";
+    }
+
+    @GetMapping("/registration")
+    public String getRegister(Model model) {
+        model.addAttribute("registrationinfo", new RegistrationInfo());
+        return "registration";
+    }
+
+    @PostMapping("/registration-submit")
+    public String registrationSubmit(@ModelAttribute RegistrationInfo registrationInfo, Model model) {
+        model.addAttribute(registrationInfo);
+        //REGISTER? https://www.baeldung.com/registration-with-spring-mvc-and-spring-security
         return "redirect:/person";
     }
 
