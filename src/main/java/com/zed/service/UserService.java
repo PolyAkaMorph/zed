@@ -43,8 +43,6 @@ public class UserService {
             registrationInfo.setError("Passwords dont match!");
             return false;
         }
-        PasswordEncoder delegatingPasswordEncoder = PasswordEncoderFactories.createDelegatingPasswordEncoder();
-        registrationInfo.setPassword(delegatingPasswordEncoder.encode(registrationInfo.getPassword()));
         if (preparedStatement.checkIfUserExists(registrationInfo)) {
             registrationInfo.setError("Login allready exists!");
             return false;

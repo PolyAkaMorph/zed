@@ -5,6 +5,8 @@ import com.zed.dto.RegistrationInfo;
 import com.zed.service.UserService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.factory.PasswordEncoderFactories;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -50,6 +52,8 @@ public class ApiV1 {
     @PostMapping("/registration-submit")
     public String registrationSubmit(@ModelAttribute RegistrationInfo registrationInfo, Model model) {
         if (userService.isUserReadyForRegister(registrationInfo)) {
+            PasswordEncoder delegatingPasswordEncoder = PasswordEncoderFactories.createDelegatingPasswordEncoder();
+            registrationInfo.setPassword(delegatingPasswordEncoder.encode(registrationInfo.getPassword()));
             userService.register(registrationInfo);
             //REGISTER? https://www.baeldung.com/registration-with-spring-mvc-and-spring-security
             return "redirect:/login?register";
