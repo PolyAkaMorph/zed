@@ -49,10 +49,16 @@ public class ApiV1 {
 
     @PostMapping("/registration-submit")
     public String registrationSubmit(@ModelAttribute RegistrationInfo registrationInfo, Model model) {
-        model.addAttribute(registrationInfo);
-        userService.register(registrationInfo);
-        //REGISTER? https://www.baeldung.com/registration-with-spring-mvc-and-spring-security
-        return "redirect:/login";
+        if (userService.isUserReadyForRegister(registrationInfo)) {
+            userService.register(registrationInfo);
+            //REGISTER? https://www.baeldung.com/registration-with-spring-mvc-and-spring-security
+            return "redirect:/login?register";
+        }
+        registrationInfo.setPassword(null);
+        registrationInfo.setPasswordCheck(null);
+        model.addAttribute("registrationinfo", registrationInfo);
+        return "/registration";
+
     }
 
     @GetMapping("/all")

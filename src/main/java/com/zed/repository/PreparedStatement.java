@@ -1,9 +1,11 @@
 package com.zed.repository;
 
 import com.zed.dto.PersonInfo;
+import com.zed.dto.RegistrationInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Component;
 
@@ -16,6 +18,8 @@ import java.util.stream.Collectors;
 public class PreparedStatement {
     @Autowired
     JdbcTemplate jdbcTemplate;
+    @Autowired
+    NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
     public String getTest() {
         String sql = "select id, test_str from test";
@@ -36,5 +40,13 @@ public class PreparedStatement {
         String insertSql = "insert into person (user_id, name, surname, age, sex, interests, city) values (?,?,?,?,?,?,?);";
         jdbcTemplate.update(insertSql, newUserId,
                 personInfo.getName(), personInfo.getSurname(), personInfo.getAge(), personInfo.getSex(), personInfo.getInterests(), personInfo.getCity());
+    }
+
+    public boolean checkIfUserExists(RegistrationInfo registrationInfo) {
+        String sql = "select count(1) from user u where u.login = :login";
+        MapSqlParameterSource mapSqlParameterSource = new MapSqlParameterSource()
+                                                        .addValue("login", registrationInfo.getLogin());
+        Integer count = namedParameterJdbcTemplate.queryForObject(sql, mapSqlParameterSource, Integer.class);
+        return count > 0;
     }
 }

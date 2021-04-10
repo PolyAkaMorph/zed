@@ -72,13 +72,16 @@ CREATE TABLE `social`.`friendship` (
     ON UPDATE CASCADE);
 
 ---------------------------------------
+/*
 drop schema social;
 create schema social;
+*/
+drop table user;
 
 CREATE TABLE `social`.`user` (
      `user_id` INT NOT NULL AUTO_INCREMENT,
-     `login` VARCHAR(255) NOT NULL,
-     `password_hash` VARCHAR(32) NOT NULL,
+     `login` VARCHAR(255) NOT NULL UNIQUE,
+     `password_hash` VARCHAR(255) NOT NULL,
      `registration_date` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
      `last_login_date` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
      `role` VARCHAR(32) NOT NULL DEFAULT 'USER',
@@ -89,7 +92,7 @@ CREATE TABLE `social`.`person` (
        `user_id` INT NOT NULL,
        `name` VARCHAR(225) NULL,
        `surname` VARCHAR(225) NULL,
-       `age` INT NULL,
+       `age` VARCHAR(45) NULL,
        `sex` VARCHAR(45) NULL,
        `interests` VARCHAR(225) NULL,
        `city` VARCHAR(45) NULL,
