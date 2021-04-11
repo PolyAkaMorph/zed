@@ -2,16 +2,18 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Personal</title>
+    <title>Fellow page</title>
 </head>
 <body>
-<h1>His name is %NAME%</h1>
-<h1>His surname is %SURNAME%</h1>
-<h1>His age is %AGE%</h1>
-<h1>His sex is %SEX%</h1>
-<h1>His interests are %INTERESTS%</h1>
-<h1>His city is %CITY%</h1>
 
+<div th:text="'His name is ' + ${registrationinfo.name}"></div>
+<div th:text="'His surname is ' + ${registrationinfo.surname}"></div>
+<div th:text="'His age is ' + ${registrationinfo.age}"></div>
+<div th:text="'His sex is ' + ${registrationinfo.sex}"></div>
+<div th:text="'His interests are ' + ${registrationinfo.interests}"></div>
+<div th:text="'His city is ' + ${registrationinfo.city}"></div>
+
+<p>Click <a th:href="'/friendship?id='+${registrationinfo.login}">here</a> to start a friendship with fellow!.</p>
 <p>Click <a th:href="@{/mypage}">here</a> to go back to your personal page.</p>
 <p>Click <a th:href="@{/friends}">here</a> to see your friends.</p>
 <p>Click <a th:href="@{/all}">here</a> to see all the people.</p>

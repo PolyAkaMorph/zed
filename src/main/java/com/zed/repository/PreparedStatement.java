@@ -102,7 +102,8 @@ public class PreparedStatement {
                         personInfo.getString("age"),
                         personInfo.getString("sex"),
                         personInfo.getString("interests"),
-                        personInfo.getString("city")
+                        personInfo.getString("city"),
+                        login
                 ), login);
     }
 
@@ -114,6 +115,14 @@ public class PreparedStatement {
                 rs.getString("surname"), rs.getString("age"), rs.getString("sex"),
                 rs.getString("interests"), rs.getString("city"), Strings.EMPTY)
                 ,currentLogin);
+
+    }
+
+    public List<RegistrationInfo> getAllFriends(String currentLogin) {
+        return getAllPersons(currentLogin);
+    }
+
+    public void setNewFriend(String currentLogin, String login) {
 
     }
 }

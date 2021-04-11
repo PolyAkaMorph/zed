@@ -5,8 +5,15 @@
     <title>Friends</title>
 </head>
 <body>
-<p>Here are your friends:</p>
-
+<p>Here are all your friends:</p>
+<tr th:each="registrationinfo : ${registrationinfos}">
+    <p>
+    <td><a th:href="'/fellow?id='+${registrationinfo.login}" th:text="${registrationinfo.login}"></a></td>
+    <td th:text="${registrationinfo.name}"></td>
+    <td th:text="${registrationinfo.surname}"></td>
+    <td th:text="${registrationinfo.age} + ' y.o.'"></td>
+    </p>
+</tr>
 
 <p>Click <a th:href="@{/mypage}">here</a> to go back to your personal page.</p>
 <p>Click <a th:href="@{/all}">here</a> to see all the people.</p>

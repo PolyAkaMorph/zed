@@ -51,7 +51,7 @@ public class UserService {
         }
         return true;
     }
-
+//todo refactor DTO usage
     public void editPersonal(PersonInfo personInfo) {
         String login = securityService.getCurrentLogin();
         preparedStatement.updatePersonInfo(login, personInfo);
@@ -64,5 +64,19 @@ public class UserService {
 
     public List<RegistrationInfo> getAllPersons() {
         return preparedStatement.getAllPersons(securityService.getCurrentLogin());
+    }
+
+    public List<RegistrationInfo> getAllFriends() {
+        return preparedStatement.getAllFriends(securityService.getCurrentLogin());
+    }
+
+    public RegistrationInfo getRegInfo(String login) {
+        RegistrationInfo registrationInfo = new RegistrationInfo(preparedStatement.getPersonInfo(login));
+        registrationInfo.setLogin(login);
+        return registrationInfo;
+    }
+
+    public void setNewFriend(String login) {
+        preparedStatement.setNewFriend(securityService.getCurrentLogin(),login);
     }
 }

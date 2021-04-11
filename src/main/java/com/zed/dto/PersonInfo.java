@@ -17,6 +17,7 @@ public class PersonInfo {
     protected String sex;
     protected String interests;
     protected String city;
+    protected String login;
 
     public Map<String, Object> getPersonInfoAsHashMap() {
         Map<String, Object> map = new HashMap<>();
@@ -26,6 +27,7 @@ public class PersonInfo {
         map.put("sex", this.getSex());
         map.put("interests", this.getInterests());
         map.put("city", this.getCity());
+        map.put("login", this.getLogin());
         return map;
     }
 }

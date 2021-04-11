@@ -12,6 +12,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 @Slf4j
 @Controller
@@ -60,20 +61,27 @@ public class ApiV1 {
 
     @GetMapping("/all")
     public String getAll(Model model) {
-        model.addAttribute("persons", userService.getAllPersons());
+        model.addAttribute("registrationinfos", userService.getAllPersons());
         return "all";
     }
 
     @GetMapping("/friends")
     public String getFriends(Model model) {
-        model.addAttribute("test", "test");
+        model.addAttribute("registrationinfos", userService.getAllFriends());
         return "friends";
     }
 
-    @GetMapping("/friend")
-    public String getFriend(Model model) {
-        model.addAttribute("test", "test");
+    @GetMapping("/fellow")
+    public String getFellow(@RequestParam String id, Model model) {
+        model.addAttribute("registrationinfo", userService.getRegInfo(id));
         return "fellow";
+    }
+
+    @GetMapping("/friendship")
+    public String getNewFriend(@RequestParam String id, @ModelAttribute RegistrationInfo registrationInfo, Model model) {
+        model.addAttribute("personinfo", registrationInfo);
+        userService.setNewFriend(registrationInfo.getLogin());
+        return "redirect:/fellow?id=" + registrationInfo.getLogin();
     }
 }
 

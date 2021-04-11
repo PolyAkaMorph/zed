@@ -6,14 +6,12 @@
 </head>
 <body>
 <p>Here are all the people:</p>
-<tr th:each="person : ${persons}">
+<tr th:each="registrationinfo : ${registrationinfos}">
     <p>
-    <td>
-        <a th:href="${person.login}" th:text="${person.login}" target="_blank"></a>
-    </td>
-    <td th:text="${person.name}"></td>
-    <td th:text="${person.surname}"></td>
-    <td th:text="${person.age} + ' y.o.'"></td>
+    <td><a th:href="'/fellow?id='+${registrationinfo.login}" th:text="${registrationinfo.login}"></a></td>
+    <td th:text="${registrationinfo.name}"></td>
+    <td th:text="${registrationinfo.surname}"></td>
+    <td th:text="${registrationinfo.age} + ' y.o.'"></td>
     </p>
 </tr>
 <p>Click <a th:href="@{/mypage}">here</a> to go back to your personal page.</p>
