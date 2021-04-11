@@ -22,12 +22,6 @@ public class PreparedStatement {
     @Autowired
     NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
-    public String getTest() {
-        String sql = "select id, test_str from test";
-        List<Map<String, Object>> maps = jdbcTemplate.queryForList(sql);
-        return maps.stream().map(e -> e.get("test_str").toString()).collect(Collectors.joining());
-    }
-
     public Integer createNewUser(String login, String password) {
         SimpleJdbcInsert jdbcInsert = new SimpleJdbcInsert(jdbcTemplate);
         jdbcInsert.withTableName("user").usingGeneratedKeyColumns("user_id").usingColumns("login", "password_hash");
@@ -43,12 +37,18 @@ public class PreparedStatement {
                 personInfo.getName(), personInfo.getSurname(), personInfo.getAge(), personInfo.getSex(), personInfo.getInterests(), personInfo.getCity());
     }
 
-    public boolean checkIfUserExists(RegistrationInfo registrationInfo) {
-        String sql = "select count(1) from user u where u.login = :login";
+    public Integer getUserID(String login) {
+        String sql = "select u.user_id from user u where u.login = :login";
         MapSqlParameterSource mapSqlParameterSource = new MapSqlParameterSource()
-                .addValue("login", registrationInfo.getLogin());
-        Integer count = namedParameterJdbcTemplate.queryForObject(sql, mapSqlParameterSource, Integer.class);
-        return count > 0;
+                .addValue("login", login);
+        return namedParameterJdbcTemplate.queryForObject(sql, mapSqlParameterSource, Integer.class);
+    }
+
+    public Integer getPersonID(String login) {
+        String sql = "select p.person_id from user u join person p on p.user_id = u.user_id where u.login = :login";
+        MapSqlParameterSource mapSqlParameterSource = new MapSqlParameterSource()
+                .addValue("login", login);
+        return namedParameterJdbcTemplate.queryForObject(sql, mapSqlParameterSource, Integer.class);
     }
 
     public UserInfo getUserInfo(String login) {
@@ -63,4 +63,36 @@ public class PreparedStatement {
     }
 
 
+    public void updatePersonInfo(String login, PersonInfo personInfo) {
+        Integer personID = getPersonID(login);
+
+        String sql = "update person p set " +
+                "p.name = coalesce(nullif(:name,''), p.name), " +
+                "p.surname = coalesce(nullif(:surname,''), p.surname), " +
+                "p.age = coalesce(nullif(:age,''), p.age), " +
+                "p.sex = coalesce(nullif(:sex,''), p.sex), " +
+                "p.interests = coalesce(nullif(:interests,''), p.interests), " +
+                "p.city = coalesce(nullif(:city,''), p.city) " +
+                "where p.person_id = :person_id;";
+        Map<String, Object> parameters = new HashMap<>();
+        parameters.put("name", personInfo.getName());
+        parameters.put("surname", personInfo.getSurname());
+        parameters.put("age", personInfo.getAge());
+        parameters.put("sex", personInfo.getSex());
+        parameters.put("interests", personInfo.getInterests());
+        parameters.put("city", personInfo.getCity());
+        parameters.put("person_id", personID);
+
+        namedParameterJdbcTemplate.update(sql, parameters);
+    }
+
+//    public void updatePersonInfo(String login, PersonInfo personInfo) {
+//        Integer personID = getPersonID(login);
+//        String sql = "update person p set p.name = :name where p.person_id = :person_id";
+//        MapSqlParameterSource mapSqlParameterSource = new MapSqlParameterSource()
+//                .addValue("person_id", personID)
+//                .addValue("name", personInfo.getName());
+//        jdbcTemplate.update(sql, mapSqlParameterSource);
+//
+//    }
 }

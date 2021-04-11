@@ -39,7 +39,7 @@ public class ApiV1 {
     @PostMapping("/edit-submit")
     public String editSubmit(@ModelAttribute PersonInfo personInfo, Model model) {
         model.addAttribute(personInfo);
-        log.debug(personInfo.getAge());
+        userService.editPersonal(personInfo);
         return "redirect:/person";
     }
 

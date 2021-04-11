@@ -1,12 +1,11 @@
 package com.zed.service;
 
+import com.zed.dto.PersonInfo;
 import com.zed.dto.RegistrationInfo;
 import com.zed.repository.PreparedStatement;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.logging.log4j.util.Strings;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.factory.PasswordEncoderFactories;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -17,6 +16,8 @@ import java.util.Objects;
 public class UserService {
     @Autowired
     PreparedStatement preparedStatement;
+    @Autowired
+    SecurityService securityService;
 
     @Transactional
     public void register(RegistrationInfo registrationInfo) {
@@ -43,10 +44,15 @@ public class UserService {
             registrationInfo.setError("Passwords dont match!");
             return false;
         }
-        if (preparedStatement.checkIfUserExists(registrationInfo)) {
+        if (!Objects.isNull(preparedStatement.getUserID(registrationInfo.getLogin()))) {
             registrationInfo.setError("Login allready exists!");
             return false;
         }
         return true;
+    }
+
+    public void editPersonal(PersonInfo personInfo) {
+        String login = securityService.getCurrentLogin();
+        preparedStatement.updatePersonInfo(login, personInfo);
     }
 }
