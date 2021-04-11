@@ -10,5 +10,8 @@
 
 <p>Click <a th:href="@{/person}">here</a> to go back to your personal page.</p>
 <p>Click <a th:href="@{/all}">here</a> to see all the people.</p>
+<form method="POST" th:action="@{/logout}">
+    <button type="submit" name="submit" value="value" class="link-button">LOGOUT</button>
+</form>
 </body>
 </html>
