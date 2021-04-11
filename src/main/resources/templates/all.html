@@ -6,11 +6,17 @@
 </head>
 <body>
 <p>Here are all the people:</p>
-<h2>
-    <span th:text="'Hello, ' + ${test}"></span>
-    <span th:text="${test}"></span>
-</h2>
-<p>Click <a th:href="@{/person}">here</a> to go back to your personal page.</p>
+<tr th:each="person : ${persons}">
+    <p>
+    <td>
+        <a th:href="${person.login}" th:text="${person.login}" target="_blank"></a>
+    </td>
+    <td th:text="${person.name}"></td>
+    <td th:text="${person.surname}"></td>
+    <td th:text="${person.age} + ' y.o.'"></td>
+    </p>
+</tr>
+<p>Click <a th:href="@{/mypage}">here</a> to go back to your personal page.</p>
 <p>Click <a th:href="@{/friends}">here</a> to see your friends.</p>
 <form method="POST" th:action="@{/logout}">
     <button type="submit" name="submit" value="value" class="link-button">LOGOUT</button>

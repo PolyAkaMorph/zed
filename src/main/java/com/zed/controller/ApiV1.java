@@ -19,10 +19,10 @@ public class ApiV1 {
     @Autowired
     UserService userService;
 
-    @GetMapping("/person")
-    public String getPerson(Model model) {
+    @GetMapping("/mypage")
+    public String getMyPage(Model model) {
         model.addAttribute("personinfo", userService.getCurrentPerson());
-        return "person";
+        return "mypage";
     }
 
     @GetMapping("/edit")
@@ -35,7 +35,7 @@ public class ApiV1 {
     public String editSubmit(@ModelAttribute PersonInfo personInfo, Model model) {
         model.addAttribute(personInfo);
         userService.editPersonal(personInfo);
-        return "redirect:/person";
+        return "redirect:/mypage";
     }
 
     @GetMapping("/registration")
@@ -56,12 +56,11 @@ public class ApiV1 {
         registrationInfo.setPasswordCheck(null);
         model.addAttribute("registrationinfo", registrationInfo);
         return "/registration";
-
     }
 
     @GetMapping("/all")
     public String getAll(Model model) {
-        model.addAttribute("test", "test");
+        model.addAttribute("persons", userService.getAllPersons());
         return "all";
     }
 
@@ -74,7 +73,7 @@ public class ApiV1 {
     @GetMapping("/friend")
     public String getFriend(Model model) {
         model.addAttribute("test", "test");
-        return "friend";
+        return "fellow";
     }
 }
 

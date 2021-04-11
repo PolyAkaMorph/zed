@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org" xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title>Personal</title>
@@ -12,6 +12,7 @@
 <h1>His interests are %INTERESTS%</h1>
 <h1>His city is %CITY%</h1>
 
+<p>Click <a th:href="@{/mypage}">here</a> to go back to your personal page.</p>
 <p>Click <a th:href="@{/friends}">here</a> to see your friends.</p>
 <p>Click <a th:href="@{/all}">here</a> to see all the people.</p>
 <form method="POST" th:action="@{/logout}">

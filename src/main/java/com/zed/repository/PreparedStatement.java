@@ -1,7 +1,9 @@
 package com.zed.repository;
 
 import com.zed.dto.PersonInfo;
+import com.zed.dto.RegistrationInfo;
 import com.zed.dto.UserInfo;
+import org.apache.logging.log4j.util.Strings;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -11,6 +13,7 @@ import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Component;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Component
@@ -101,5 +104,16 @@ public class PreparedStatement {
                         personInfo.getString("interests"),
                         personInfo.getString("city")
                 ), login);
+    }
+
+    public List<RegistrationInfo> getAllPersons(String currentLogin) {
+        String sql = "select u.login, p.name, p.surname, p.age, p.sex, p.interests, p.city from user u join person p on p.user_id = u.user_id where u.login <> ?;";
+        return jdbcTemplate.query(sql,
+                (rs, rownum) -> new RegistrationInfo(
+                rs.getString("login"), Strings.EMPTY, Strings.EMPTY, rs.getString("name"),
+                rs.getString("surname"), rs.getString("age"), rs.getString("sex"),
+                rs.getString("interests"), rs.getString("city"), Strings.EMPTY)
+                ,currentLogin);
+
     }
 }

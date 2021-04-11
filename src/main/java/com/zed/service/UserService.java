@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Objects;
 
 @Slf4j
@@ -59,5 +60,9 @@ public class UserService {
     public PersonInfo getCurrentPerson() {
         String login = securityService.getCurrentLogin();
         return preparedStatement.getPersonInfo(login);
+    }
+
+    public List<RegistrationInfo> getAllPersons() {
+        return preparedStatement.getAllPersons(securityService.getCurrentLogin());
     }
 }

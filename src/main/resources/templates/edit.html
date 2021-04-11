@@ -5,7 +5,7 @@
     <title>Personal</title>
 </head>
 <body>
-<p>Click <a th:href="@{/person}">here</a> to go back to your personal page.</p>
+<p>Click <a th:href="@{/mypage}">here</a> to go back to your personal page.</p>
 
 <form action="#" th:action="@{/edit-submit}" th:object="${personinfo}" method="post">
     <p>Name: <input type="text" th:field="*{name}" /></p>
