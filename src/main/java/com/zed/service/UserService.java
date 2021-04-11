@@ -23,7 +23,7 @@ public class UserService {
     public void register(RegistrationInfo registrationInfo) {
         log.debug("Registrating user with info {}", registrationInfo.toString());
         Integer newUserId = preparedStatement.createNewUser(registrationInfo.getLogin(), registrationInfo.getPassword());
-        preparedStatement.createNewPersonal(registrationInfo.getPersonInfo(), newUserId);
+        Integer newPersonId = preparedStatement.createNewPersonal(registrationInfo.getPersonInfo(), newUserId);
         log.debug("Successful registration");
     }
 

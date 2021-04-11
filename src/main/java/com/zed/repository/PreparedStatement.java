@@ -1,10 +1,8 @@
 package com.zed.repository;
 
 import com.zed.dto.PersonInfo;
-import com.zed.dto.RegistrationInfo;
 import com.zed.dto.UserInfo;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataAccessException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
@@ -13,9 +11,7 @@ import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Component;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 @Component
 public class PreparedStatement {
@@ -33,10 +29,13 @@ public class PreparedStatement {
         return jdbcInsert.executeAndReturnKey(new MapSqlParameterSource(parameters)).intValue();
     }
 
-    public void createNewPersonal(PersonInfo personInfo, Integer newUserId) {
-        String sql = "insert into person (user_id, name, surname, age, sex, interests, city) values (?,?,?,?,?,?,?);";
-        jdbcTemplate.update(sql, newUserId,
-                personInfo.getName(), personInfo.getSurname(), personInfo.getAge(), personInfo.getSex(), personInfo.getInterests(), personInfo.getCity());
+    public Integer createNewPersonal(PersonInfo personInfo, Integer newUserId) {
+        SimpleJdbcInsert jdbcInsert = new SimpleJdbcInsert(jdbcTemplate);
+        jdbcInsert.withTableName("person").usingGeneratedKeyColumns("person_id")
+                .usingColumns("user_id", "name", "surname", "age", "sex", "interests", "city");
+        Map<String, Object> parameters = personInfo.getPersonInfoAsHashMap();
+        parameters.put("user_id",newUserId);
+        return jdbcInsert.executeAndReturnKey(parameters).intValue();
     }
 
     public Integer getUserID(String login) {
@@ -77,20 +76,14 @@ public class PreparedStatement {
         Integer personID = getPersonID(login);
 
         String sql = "update person p set " +
-                "p.name = coalesce(nullif(:name,''), p.name), " +
-                "p.surname = coalesce(nullif(:surname,''), p.surname), " +
-                "p.age = coalesce(nullif(:age,''), p.age), " +
-                "p.sex = coalesce(nullif(:sex,''), p.sex), " +
-                "p.interests = coalesce(nullif(:interests,''), p.interests), " +
-                "p.city = coalesce(nullif(:city,''), p.city) " +
+                "p.name =       coalesce(nullif(:name,''), p.name), " +
+                "p.surname =    coalesce(nullif(:surname,''), p.surname), " +
+                "p.age =        coalesce(nullif(:age,''), p.age), " +
+                "p.sex =        coalesce(nullif(:sex,''), p.sex), " +
+                "p.interests =  coalesce(nullif(:interests,''), p.interests), " +
+                "p.city =       coalesce(nullif(:city,''), p.city) " +
                 "where p.person_id = :person_id;";
-        Map<String, Object> parameters = new HashMap<>();
-        parameters.put("name", personInfo.getName());
-        parameters.put("surname", personInfo.getSurname());
-        parameters.put("age", personInfo.getAge());
-        parameters.put("sex", personInfo.getSex());
-        parameters.put("interests", personInfo.getInterests());
-        parameters.put("city", personInfo.getCity());
+        Map<String, Object> parameters = personInfo.getPersonInfoAsHashMap();
         parameters.put("person_id", personID);
 
         namedParameterJdbcTemplate.update(sql, parameters);
