@@ -4,6 +4,8 @@ import com.zed.dto.PersonInfo;
 import com.zed.dto.RegistrationInfo;
 import com.zed.dto.UserInfo;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
@@ -41,14 +43,22 @@ public class PreparedStatement {
         String sql = "select u.user_id from user u where u.login = :login";
         MapSqlParameterSource mapSqlParameterSource = new MapSqlParameterSource()
                 .addValue("login", login);
-        return namedParameterJdbcTemplate.queryForObject(sql, mapSqlParameterSource, Integer.class);
+        try {
+            return namedParameterJdbcTemplate.queryForObject(sql, mapSqlParameterSource, Integer.class);
+        } catch (EmptyResultDataAccessException e) {
+            return null;
+        }
     }
 
     public Integer getPersonID(String login) {
         String sql = "select p.person_id from user u join person p on p.user_id = u.user_id where u.login = :login";
         MapSqlParameterSource mapSqlParameterSource = new MapSqlParameterSource()
                 .addValue("login", login);
-        return namedParameterJdbcTemplate.queryForObject(sql, mapSqlParameterSource, Integer.class);
+        try {
+            return namedParameterJdbcTemplate.queryForObject(sql, mapSqlParameterSource, Integer.class);
+        } catch (EmptyResultDataAccessException e) {
+            return null;
+        }
     }
 
     public UserInfo getUserInfo(String login) {
@@ -86,13 +96,17 @@ public class PreparedStatement {
         namedParameterJdbcTemplate.update(sql, parameters);
     }
 
-//    public void updatePersonInfo(String login, PersonInfo personInfo) {
-//        Integer personID = getPersonID(login);
-//        String sql = "update person p set p.name = :name where p.person_id = :person_id";
-//        MapSqlParameterSource mapSqlParameterSource = new MapSqlParameterSource()
-//                .addValue("person_id", personID)
-//                .addValue("name", personInfo.getName());
-//        jdbcTemplate.update(sql, mapSqlParameterSource);
-//
-//    }
+    public PersonInfo getPersonInfo(String login) {
+        String sql = "select p.name, p.surname, p.age, p.sex, p.interests, p.city from user u join person p on p.user_id = u.user_id where u.login = ?";
+
+        return jdbcTemplate.queryForObject(sql, (personInfo, rowNum) ->
+                new PersonInfo(
+                        personInfo.getString("name"),
+                        personInfo.getString("surname"),
+                        personInfo.getString("age"),
+                        personInfo.getString("sex"),
+                        personInfo.getString("interests"),
+                        personInfo.getString("city")
+                ), login);
+    }
 }

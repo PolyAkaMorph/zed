@@ -21,18 +21,13 @@ public class ApiV1 {
 
     @GetMapping("/person")
     public String getPerson(Model model) {
-        model.addAttribute("name", "Nikola");
-        model.addAttribute("surname", "Tesla");
-        model.addAttribute("age", "40");
-        model.addAttribute("sex", "MALE");
-        model.addAttribute("interests", "Electricity");
-        model.addAttribute("city", "New York");
+        model.addAttribute("personinfo", userService.getCurrentPerson());
         return "person";
     }
 
     @GetMapping("/edit")
     public String getEdit(Model model) {
-        model.addAttribute("personinfo", new PersonInfo());
+        model.addAttribute("personinfo", userService.getCurrentPerson());
         return "edit";
     }
 
@@ -55,7 +50,6 @@ public class ApiV1 {
             PasswordEncoder delegatingPasswordEncoder = PasswordEncoderFactories.createDelegatingPasswordEncoder();
             registrationInfo.setPassword(delegatingPasswordEncoder.encode(registrationInfo.getPassword()));
             userService.register(registrationInfo);
-            //REGISTER? https://www.baeldung.com/registration-with-spring-mvc-and-spring-security
             return "redirect:/login?register";
         }
         registrationInfo.setPassword(null);

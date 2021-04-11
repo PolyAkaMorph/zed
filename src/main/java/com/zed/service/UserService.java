@@ -55,4 +55,9 @@ public class UserService {
         String login = securityService.getCurrentLogin();
         preparedStatement.updatePersonInfo(login, personInfo);
     }
+
+    public PersonInfo getCurrentPerson() {
+        String login = securityService.getCurrentLogin();
+        return preparedStatement.getPersonInfo(login);
+    }
 }
