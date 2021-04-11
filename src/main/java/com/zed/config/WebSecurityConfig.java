@@ -18,21 +18,20 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http
                 .authorizeRequests()
-                .antMatchers("/", "/home", "/registration", "/registration-submit").permitAll()
+                .antMatchers("/", "/home", "/registration", "/registration-submit", "/login*").permitAll()
                 .anyRequest().authenticated()
-                .and()
+        .and()
                 .formLogin()
                 .loginPage("/login")
                 .permitAll()
-                .and()
+        .and()
                 .logout()
                 .logoutUrl("/logout")
                 .logoutSuccessUrl("/login?logout")
-                .and()
+        .and()
                 .logout()
                 .permitAll();
     }
-
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
