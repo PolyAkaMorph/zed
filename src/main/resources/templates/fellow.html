@@ -6,14 +6,16 @@
 </head>
 <body>
 
-<div th:text="'His name is ' + ${registrationinfo.name}"></div>
-<div th:text="'His surname is ' + ${registrationinfo.surname}"></div>
-<div th:text="'His age is ' + ${registrationinfo.age}"></div>
-<div th:text="'His sex is ' + ${registrationinfo.sex}"></div>
-<div th:text="'His interests are ' + ${registrationinfo.interests}"></div>
-<div th:text="'His city is ' + ${registrationinfo.city}"></div>
+<div th:text="'His name is ' + ${personinfo.name}"></div>
+<div th:text="'His surname is ' + ${personinfo.surname}"></div>
+<div th:text="'His age is ' + ${personinfo.age}"></div>
+<div th:text="'His sex is ' + ${personinfo.sex}"></div>
+<div th:text="'His interests are ' + ${personinfo.interests}"></div>
+<div th:text="'His city is ' + ${personinfo.city}"></div>
 
-<p>Click <a th:href="'/friendship?id='+${registrationinfo.login}">here</a> to start a friendship with fellow!.</p>
+<div th:if="${personinfo.isFriendToCurrent}">
+    <p>Click <a th:href="'/friendship?id='+${personinfo.login}">here</a> to start a friendship with fellow!</p>
+</div>
 <p>Click <a th:href="@{/mypage}">here</a> to go back to your personal page.</p>
 <p>Click <a th:href="@{/friends}">here</a> to see your friends.</p>
 <p>Click <a th:href="@{/all}">here</a> to see all the people.</p>

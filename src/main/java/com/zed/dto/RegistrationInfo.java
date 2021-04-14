@@ -4,6 +4,9 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.HashMap;
+import java.util.Map;
+
 
 @Data
 @AllArgsConstructor
@@ -20,16 +23,15 @@ public class RegistrationInfo {
     protected String city;
     protected String error;
 
-    public RegistrationInfo(PersonInfo personInfo) {
-        this.name = personInfo.getName();
-        this.surname = personInfo.getSurname();
-        this.age = personInfo.getAge();
-        this.sex = personInfo.getSex();
-        this.interests = personInfo.getInterests();
-        this.city = personInfo.getCity();
-    }
-
-    public PersonInfo getPersonInfo() {
-        return new PersonInfo(name, surname, age, sex, interests, city, login);
+    public Map<String, Object> getPersonInfoAsHashMap() {
+        Map<String, Object> map = new HashMap<>();
+        map.put("name", this.getName());
+        map.put("surname", this.getSurname());
+        map.put("age", this.getAge());
+        map.put("sex", this.getSex());
+        map.put("interests", this.getInterests());
+        map.put("city", this.getCity());
+        map.put("login", this.getLogin());
+        return map;
     }
 }

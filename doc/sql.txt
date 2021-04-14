@@ -100,7 +100,7 @@ CREATE TABLE `social`.`person` (
 
 CREATE TABLE `social`.`friendship` (
        `friendship_id` INT NOT NULL AUTO_INCREMENT,
-       `person_id` INT NOT NULL,
-       `friend_person_id` INT NOT NULL,
-       `friendship_date` DATETIME NOT NULL,
+       `user_id` INT NOT NULL,
+       `friend_user_id` INT NOT NULL,
+       `friendship_date` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
        PRIMARY KEY (`friendship_id`));

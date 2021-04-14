@@ -32,11 +32,11 @@ public class PreparedStatement {
         return jdbcInsert.executeAndReturnKey(new MapSqlParameterSource(parameters)).intValue();
     }
 
-    public Integer createNewPersonal(PersonInfo personInfo, Integer newUserId) {
+    public Integer createNewPersonal(RegistrationInfo registrationInfo, Integer newUserId) {
         SimpleJdbcInsert jdbcInsert = new SimpleJdbcInsert(jdbcTemplate);
         jdbcInsert.withTableName("person").usingGeneratedKeyColumns("person_id")
                 .usingColumns("user_id", "name", "surname", "age", "sex", "interests", "city");
-        Map<String, Object> parameters = personInfo.getPersonInfoAsHashMap();
+        Map<String, Object> parameters = registrationInfo.getPersonInfoAsHashMap();
         parameters.put("user_id",newUserId);
         return jdbcInsert.executeAndReturnKey(parameters).intValue();
     }
@@ -92,37 +92,93 @@ public class PreparedStatement {
         namedParameterJdbcTemplate.update(sql, parameters);
     }
 
-    public PersonInfo getPersonInfo(String login) {
-        String sql = "select p.name, p.surname, p.age, p.sex, p.interests, p.city from user u join person p on p.user_id = u.user_id where u.login = ?";
+    public PersonInfo getPersonInfo(String currentLogin) {
+        String sql = "select u.login, p.name, p.surname, p.age, p.sex, p.interests, p.city " +
+                "from user u " +
+                "join person p on p.user_id = u.user_id " +
+                "where u.login = ?;";
 
-        return jdbcTemplate.queryForObject(sql, (personInfo, rowNum) ->
-                new PersonInfo(
+        return jdbcTemplate.queryForObject(sql, (personInfo, rowNum) -> new PersonInfo(
+                personInfo.getString("login"),
+                personInfo.getString("name"),
+                personInfo.getString("surname"),
+                personInfo.getString("age"),
+                personInfo.getString("sex"),
+                personInfo.getString("interests"),
+                personInfo.getString("city"),
+                false
+        ), currentLogin);
+    }
+
+    public PersonInfo getPersonInfo(String currentLogin, String personLogin) {
+        String sql = "select u.login, p.name, p.surname, p.age, p.sex, p.interests, p.city, f.user_id " +
+                "from user u " +
+                "join person p on p.user_id = u.user_id " +
+                "join user u2 " +
+                "left join friendship f on f.user_id = u2.user_id and f.friend_user_id = u.user_id " +
+                "where u.login = ? and u2.login = ?;";
+
+        return jdbcTemplate.queryForObject(sql, (personInfo, rowNum) -> new PersonInfo(
+                        personInfo.getString("login"),
                         personInfo.getString("name"),
                         personInfo.getString("surname"),
                         personInfo.getString("age"),
                         personInfo.getString("sex"),
                         personInfo.getString("interests"),
                         personInfo.getString("city"),
-                        login
-                ), login);
+                        Strings.isEmpty(personInfo.getString("user_id"))
+                ), personLogin, currentLogin);
     }
 
-    public List<RegistrationInfo> getAllPersons(String currentLogin) {
-        String sql = "select u.login, p.name, p.surname, p.age, p.sex, p.interests, p.city from user u join person p on p.user_id = u.user_id where u.login <> ?;";
+    public List<PersonInfo> getAllPersons(String currentLogin) {
+        String sql = "select u.login, p.name, p.surname, p.age, p.sex, p.interests, p.city " +
+                "from user u " +
+                "join person p on p.user_id = u.user_id " +
+                "where u.login <> ?;";
         return jdbcTemplate.query(sql,
-                (rs, rownum) -> new RegistrationInfo(
-                rs.getString("login"), Strings.EMPTY, Strings.EMPTY, rs.getString("name"),
-                rs.getString("surname"), rs.getString("age"), rs.getString("sex"),
-                rs.getString("interests"), rs.getString("city"), Strings.EMPTY)
+                (personInfo, rownum) -> new PersonInfo(
+                        personInfo.getString("login"),
+                        personInfo.getString("name"),
+                        personInfo.getString("surname"),
+                        personInfo.getString("age"),
+                        personInfo.getString("sex"),
+                        personInfo.getString("interests"),
+                        personInfo.getString("city"),
+                        false)
                 ,currentLogin);
 
     }
 
-    public List<RegistrationInfo> getAllFriends(String currentLogin) {
-        return getAllPersons(currentLogin);
+    public List<PersonInfo> getAllFriends(String currentLogin) {
+        String sql = "select u2.login, p.name, p.surname, p.age, p.sex, p.interests, p.city " +
+                    "from user u " +
+                    "join friendship f on f.user_id = u.user_id " +
+                    "join person p on p.user_id = f.friend_user_id " +
+                    "join user u2 on u2.user_id = f.friend_user_id " +
+                    "where u.login = ?;";
+        return jdbcTemplate.query(sql,
+                (personInfo, rownum) -> new PersonInfo(
+                        personInfo.getString("login"),
+                        personInfo.getString("name"),
+                        personInfo.getString("surname"),
+                        personInfo.getString("age"),
+                        personInfo.getString("sex"),
+                        personInfo.getString("interests"),
+                        personInfo.getString("city"),
+                        true)
+                ,currentLogin);
     }
 
     public void setNewFriend(String currentLogin, String login) {
+        SimpleJdbcInsert jdbcInsert = new SimpleJdbcInsert(jdbcTemplate);
+        jdbcInsert.withTableName("friendship").usingGeneratedKeyColumns("friendship_id")
+                .usingColumns("user_id", "friend_user_id");
+        Map<String, Object> parameters = new HashMap<>();
+        // three base requests instead of one, but code is simpler
+        parameters.put("user_id",getUserID(currentLogin));
+        parameters.put("friend_user_id",getUserID(login));
+        Integer newFriendshipId = jdbcInsert.executeAndReturnKey(parameters).intValue();
 
     }
+
 }

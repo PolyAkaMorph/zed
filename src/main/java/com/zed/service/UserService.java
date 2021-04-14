@@ -24,7 +24,7 @@ public class UserService {
     public void register(RegistrationInfo registrationInfo) {
         log.debug("Registrating user with info {}", registrationInfo.toString());
         Integer newUserId = preparedStatement.createNewUser(registrationInfo.getLogin(), registrationInfo.getPassword());
-        Integer newPersonId = preparedStatement.createNewPersonal(registrationInfo.getPersonInfo(), newUserId);
+        Integer newPersonId = preparedStatement.createNewPersonal(registrationInfo, newUserId);
         log.debug("Successful registration");
     }
 
@@ -51,7 +51,7 @@ public class UserService {
         }
         return true;
     }
-//todo refactor DTO usage
+
     public void editPersonal(PersonInfo personInfo) {
         String login = securityService.getCurrentLogin();
         preparedStatement.updatePersonInfo(login, personInfo);
@@ -62,21 +62,21 @@ public class UserService {
         return preparedStatement.getPersonInfo(login);
     }
 
-    public List<RegistrationInfo> getAllPersons() {
+    public List<PersonInfo> getAllPersons() {
         return preparedStatement.getAllPersons(securityService.getCurrentLogin());
     }
 
-    public List<RegistrationInfo> getAllFriends() {
+    public List<PersonInfo> getAllFriends() {
         return preparedStatement.getAllFriends(securityService.getCurrentLogin());
     }
 
-    public RegistrationInfo getRegInfo(String login) {
-        RegistrationInfo registrationInfo = new RegistrationInfo(preparedStatement.getPersonInfo(login));
-        registrationInfo.setLogin(login);
-        return registrationInfo;
+    public PersonInfo getPersonInfo(String login) {
+        PersonInfo personInfo = preparedStatement.getPersonInfo(securityService.getCurrentLogin(), login);
+        personInfo.setLogin(login);
+        return personInfo;
     }
 
-    public void setNewFriend(String login) {
-        preparedStatement.setNewFriend(securityService.getCurrentLogin(),login);
+    public void setNewFriend(String newFriendLogin) {
+        preparedStatement.setNewFriend(securityService.getCurrentLogin(),newFriendLogin);
     }
 }

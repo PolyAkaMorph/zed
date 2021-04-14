@@ -61,27 +61,27 @@ public class ApiV1 {
 
     @GetMapping("/all")
     public String getAll(Model model) {
-        model.addAttribute("registrationinfos", userService.getAllPersons());
+        model.addAttribute("personinfos", userService.getAllPersons());
         return "all";
     }
 
     @GetMapping("/friends")
     public String getFriends(Model model) {
-        model.addAttribute("registrationinfos", userService.getAllFriends());
+        model.addAttribute("personinfos", userService.getAllFriends());
         return "friends";
     }
 
     @GetMapping("/fellow")
     public String getFellow(@RequestParam String id, Model model) {
-        model.addAttribute("registrationinfo", userService.getRegInfo(id));
+        //todo show "YOUR FRIEND" mark
+        model.addAttribute("personinfo", userService.getPersonInfo(id));
         return "fellow";
     }
 
     @GetMapping("/friendship")
-    public String getNewFriend(@RequestParam String id, @ModelAttribute RegistrationInfo registrationInfo, Model model) {
-        model.addAttribute("personinfo", registrationInfo);
-        userService.setNewFriend(registrationInfo.getLogin());
-        return "redirect:/fellow?id=" + registrationInfo.getLogin();
+    public String getNewFriend(@RequestParam String id, Model model) {
+        userService.setNewFriend(id);
+        return "redirect:/fellow?id=" + id;
     }
 }
 

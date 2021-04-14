@@ -6,12 +6,12 @@
 </head>
 <body>
 <p>Here are all your friends:</p>
-<tr th:each="registrationinfo : ${registrationinfos}">
+<tr th:each="personinfo : ${personinfos}">
     <p>
-    <td><a th:href="'/fellow?id='+${registrationinfo.login}" th:text="${registrationinfo.login}"></a></td>
-    <td th:text="${registrationinfo.name}"></td>
-    <td th:text="${registrationinfo.surname}"></td>
-    <td th:text="${registrationinfo.age} + ' y.o.'"></td>
+    <td><a th:href="'/fellow?id='+${personinfo.login}" th:text="${personinfo.login}"></a></td>
+    <td th:text="${personinfo.name}"></td>
+    <td th:text="${personinfo.surname}"></td>
+    <td th:text="${personinfo.age} + ' y.o.'"></td>
     </p>
 </tr>
 
