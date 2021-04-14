@@ -73,7 +73,6 @@ public class ApiV1 {
 
     @GetMapping("/fellow")
     public String getFellow(@RequestParam String id, Model model) {
-        //todo show "YOUR FRIEND" mark
         model.addAttribute("personinfo", userService.getPersonInfo(id));
         return "fellow";
     }
@@ -81,6 +80,12 @@ public class ApiV1 {
     @GetMapping("/friendship")
     public String getNewFriend(@RequestParam String id, Model model) {
         userService.setNewFriend(id);
+        return "redirect:/fellow?id=" + id;
+    }
+
+    @GetMapping("/dismiss-friendship")
+    public String removeFriend(@RequestParam String id, Model model) {
+        userService.removeFriend(id);
         return "redirect:/fellow?id=" + id;
     }
 }

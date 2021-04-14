@@ -79,4 +79,8 @@ public class UserService {
     public void setNewFriend(String newFriendLogin) {
         preparedStatement.setNewFriend(securityService.getCurrentLogin(),newFriendLogin);
     }
+
+    public void removeFriend(String friendToRemoveLogin) {
+        preparedStatement.removeFriend(securityService.getCurrentLogin(),friendToRemoveLogin);
+    }
 }

@@ -16,6 +16,9 @@
 <div th:if="${personinfo.isFriendToCurrent}">
     <p>Click <a th:href="'/friendship?id='+${personinfo.login}">here</a> to start a friendship with fellow!</p>
 </div>
+<div th:if="${!personinfo.isFriendToCurrent}">
+    <p>Click <a th:href="'/dismiss-friendship?id='+${personinfo.login}">here</a> to dismiss a friend.</p>
+</div>
 <p>Click <a th:href="@{/mypage}">here</a> to go back to your personal page.</p>
 <p>Click <a th:href="@{/friends}">here</a> to see your friends.</p>
 <p>Click <a th:href="@{/all}">here</a> to see all the people.</p>
