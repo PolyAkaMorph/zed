@@ -1,16 +1,12 @@
 package com.zed.dto;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
 
 @Data
+@AllArgsConstructor
 public class UserInfo {
     protected String login;
     protected String passwordHash;
     protected String role;
-
-    public UserInfo(String login, String passwordHash, String role) {
-        this.login = login;
-        this.passwordHash = passwordHash;
-        this.role = role;
-    }
 }

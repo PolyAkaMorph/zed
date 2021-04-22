@@ -72,11 +72,9 @@ CREATE TABLE `social`.`friendship` (
     ON UPDATE CASCADE);
 
 ---------------------------------------
-/*
-drop schema social;
+
 create schema social;
-*/
-drop table user;
+
 
 CREATE TABLE `social`.`user` (
      `user_id` INT NOT NULL AUTO_INCREMENT,
