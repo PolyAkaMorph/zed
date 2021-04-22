@@ -182,7 +182,7 @@ public class PreparedStatement {
     }
 
     public void removeFriend(String currentLogin, String friendToRemoveLogin) {
-        String sql = "delete from friendship f where f.user_id = ? and f.friend_user_id = ?;";
+        String sql = "delete from friendship where user_id = ? and friend_user_id = ?;";
         // three base requests instead of one, but code is simpler
         Integer currentUserId = getUserID(currentLogin);
         Integer friendToRemoveID = getUserID(friendToRemoveLogin);
