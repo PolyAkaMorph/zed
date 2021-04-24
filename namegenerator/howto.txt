@@ -1,0 +1,2 @@
+Run python script - it will generate data.txt with 1 million rows. Place data.txt and script.txt to C:\\ProgramData\\MySQL\\MySQL Server 8.0\\Uploads.
+Connect to MySQL and print "source %PATH_TO_FILE%", where PATH_TO_FILE - path to file (double \\ in Win path)

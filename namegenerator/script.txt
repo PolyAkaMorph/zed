@@ -1,0 +1,7 @@
+LOAD DATA INFILE 'C:\\ProgramData\\MySQL\\MySQL Server 8.0\\Uploads\\data.csv'
+INTO TABLE social.user
+CHARACTER SET UTF8
+FIELDS TERMINATED BY ','
+LINES TERMINATED BY '\n'
+(login,password_hash,name,surname,age,sex,interests,city)
+SET user_id = NULL;

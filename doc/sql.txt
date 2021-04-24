@@ -20,7 +20,6 @@ FRIENDSHIP (is magic) - таблица с дружественными связ�
     friendship_date
 ---------------------------------------
 create schema social;
-
 drop table user;
 CREATE TABLE `social`.`user` (
                                  `user_id` INT NOT NULL AUTO_INCREMENT,
@@ -35,7 +34,7 @@ CREATE TABLE `social`.`user` (
                                  `sex` VARCHAR(45) NULL,
                                  `interests` VARCHAR(225) NULL,
                                  `city` VARCHAR(45) NULL,
-                                 PRIMARY KEY (`user_id`));
+                                 PRIMARY KEY (`user_id`)) character set=cp1251;
 drop table friendship;
 CREATE TABLE `social`.`friendship` (
                                        `friendship_id` INT NOT NULL AUTO_INCREMENT,
