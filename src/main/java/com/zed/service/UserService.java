@@ -23,8 +23,7 @@ public class UserService {
     @Transactional
     public void register(RegistrationInfo registrationInfo) {
         log.debug("Registrating user with info {}", registrationInfo.toString());
-        Integer newUserId = preparedStatement.createNewUser(registrationInfo.getLogin(), registrationInfo.getPassword());
-        Integer newPersonId = preparedStatement.createNewPersonal(registrationInfo, newUserId);
+        Integer newUserId = preparedStatement.createNewUser(registrationInfo);
         log.debug("Successful registration");
     }
 

@@ -23,37 +23,16 @@ public class PreparedStatement {
     @Autowired
     NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
-    public Integer createNewUser(String login, String password) {
+    public Integer createNewUser(RegistrationInfo registrationInfo) {
         SimpleJdbcInsert jdbcInsert = new SimpleJdbcInsert(jdbcTemplate);
-        jdbcInsert.withTableName("user").usingGeneratedKeyColumns("user_id").usingColumns("login", "password_hash");
-        Map<String, Object> parameters = new HashMap<>();
-        parameters.put("login", login);
-        parameters.put("password_hash", password);
-        return jdbcInsert.executeAndReturnKey(new MapSqlParameterSource(parameters)).intValue();
-    }
-
-    public Integer createNewPersonal(RegistrationInfo registrationInfo, Integer newUserId) {
-        SimpleJdbcInsert jdbcInsert = new SimpleJdbcInsert(jdbcTemplate);
-        jdbcInsert.withTableName("person").usingGeneratedKeyColumns("person_id")
-                .usingColumns("user_id", "name", "surname", "age", "sex", "interests", "city");
+        jdbcInsert.withTableName("user").usingGeneratedKeyColumns("user_id")
+                .usingColumns("login", "password_hash","name", "surname", "age", "sex", "interests", "city");
         Map<String, Object> parameters = registrationInfo.getPersonInfoAsHashMap();
-        parameters.put("user_id",newUserId);
-        return jdbcInsert.executeAndReturnKey(parameters).intValue();
+        return jdbcInsert.executeAndReturnKey(new MapSqlParameterSource(parameters)).intValue();
     }
 
     public Integer getUserID(String login) {
         String sql = "select u.user_id from user u where u.login = :login";
-        MapSqlParameterSource mapSqlParameterSource = new MapSqlParameterSource()
-                .addValue("login", login);
-        try {
-            return namedParameterJdbcTemplate.queryForObject(sql, mapSqlParameterSource, Integer.class);
-        } catch (EmptyResultDataAccessException e) {
-            return null;
-        }
-    }
-
-    public Integer getPersonID(String login) {
-        String sql = "select p.person_id from user u join person p on p.user_id = u.user_id where u.login = :login";
         MapSqlParameterSource mapSqlParameterSource = new MapSqlParameterSource()
                 .addValue("login", login);
         try {
@@ -74,28 +53,22 @@ public class PreparedStatement {
                 ), login);
     }
 
-
     public void updatePersonInfo(String login, PersonInfo personInfo) {
-        Integer personID = getPersonID(login);
-
-        String sql = "update person p set " +
-                "p.name =       coalesce(nullif(:name,''), p.name), " +
-                "p.surname =    coalesce(nullif(:surname,''), p.surname), " +
-                "p.age =        coalesce(nullif(:age,''), p.age), " +
-                "p.sex =        coalesce(nullif(:sex,''), p.sex), " +
-                "p.interests =  coalesce(nullif(:interests,''), p.interests), " +
-                "p.city =       coalesce(nullif(:city,''), p.city) " +
-                "where p.person_id = :person_id;";
+        String sql = "update user u set " +
+                "u.name =       coalesce(nullif(:name,''), u.name), " +
+                "u.surname =    coalesce(nullif(:surname,''), u.surname), " +
+                "u.age =        coalesce(nullif(:age,''), u.age), " +
+                "u.sex =        coalesce(nullif(:sex,''), u.sex), " +
+                "u.interests =  coalesce(nullif(:interests,''), u.interests), " +
+                "u.city =       coalesce(nullif(:city,''), u.city) " +
+                "where u.person_id = :person_id;";
         Map<String, Object> parameters = personInfo.getPersonInfoAsHashMap();
-        parameters.put("person_id", personID);
-
         namedParameterJdbcTemplate.update(sql, parameters);
     }
 
     public PersonInfo getPersonInfo(String currentLogin) {
-        String sql = "select u.login, p.name, p.surname, p.age, p.sex, p.interests, p.city " +
+        String sql = "select u.login, u.name, u.surname, u.age, u.sex, u.interests, u.city " +
                 "from user u " +
-                "join person p on p.user_id = u.user_id " +
                 "where u.login = ?;";
 
         return jdbcTemplate.queryForObject(sql, (personInfo, rowNum) -> new PersonInfo(
@@ -111,11 +84,10 @@ public class PreparedStatement {
     }
 
     public PersonInfo getPersonInfo(String currentLogin, String personLogin) {
-        String sql = "select u.login, p.name, p.surname, p.age, p.sex, p.interests, p.city, f.user_id " +
+        String sql = "select u2.login, u2.name, u2.surname, u2.age, u2.sex, u2.interests, u2.city, f.friendship_id " +
                 "from user u " +
-                "join person p on p.user_id = u.user_id " +
                 "join user u2 " +
-                "left join friendship f on f.user_id = u2.user_id and f.friend_user_id = u.user_id " +
+                "left join friendship f on f.user_id = u.user_id and f.friend_user_id = u2.user_id " +
                 "where u.login = ? and u2.login = ?;";
 
         return jdbcTemplate.queryForObject(sql, (personInfo, rowNum) -> new PersonInfo(
@@ -126,14 +98,13 @@ public class PreparedStatement {
                         personInfo.getString("sex"),
                         personInfo.getString("interests"),
                         personInfo.getString("city"),
-                        Strings.isEmpty(personInfo.getString("user_id"))
-                ), personLogin, currentLogin);
+                        Strings.isEmpty(personInfo.getString("friendship_id"))
+                ), currentLogin, personLogin);
     }
 
     public List<PersonInfo> getAllPersons(String currentLogin) {
-        String sql = "select u.login, p.name, p.surname, p.age, p.sex, p.interests, p.city " +
+        String sql = "select u.login, u.name, u.surname, u.age, u.sex, u.interests, u.city " +
                 "from user u " +
-                "join person p on p.user_id = u.user_id " +
                 "where u.login <> ?;";
         return jdbcTemplate.query(sql,
                 (personInfo, rownum) -> new PersonInfo(
@@ -150,10 +121,9 @@ public class PreparedStatement {
     }
 
     public List<PersonInfo> getAllFriends(String currentLogin) {
-        String sql = "select u2.login, p.name, p.surname, p.age, p.sex, p.interests, p.city " +
+        String sql = "select u2.login, u2.name, u2.surname, u2.age, u2.sex, u2.interests, u2.city " +
                     "from user u " +
                     "join friendship f on f.user_id = u.user_id " +
-                    "join person p on p.user_id = f.friend_user_id " +
                     "join user u2 on u2.user_id = f.friend_user_id " +
                     "where u.login = ?;";
         return jdbcTemplate.query(sql,
@@ -170,23 +140,17 @@ public class PreparedStatement {
     }
 
     public void setNewFriend(String currentLogin, String login) {
-        SimpleJdbcInsert jdbcInsert = new SimpleJdbcInsert(jdbcTemplate);
-        jdbcInsert.withTableName("friendship").usingGeneratedKeyColumns("friendship_id")
-                .usingColumns("user_id", "friend_user_id");
-        Map<String, Object> parameters = new HashMap<>();
-        // three base requests instead of one, but code is simpler
-        parameters.put("user_id",getUserID(currentLogin));
-        parameters.put("friend_user_id",getUserID(login));
-        Integer newFriendshipId = jdbcInsert.executeAndReturnKey(parameters).intValue();
-
+        String sql = "insert into friendship (user_id, friend_user_id) " +
+                "select u.user_id, u2.user_id from user u, user u2 where u.login = :currentLogin and u2.login = :login;";
+        namedParameterJdbcTemplate.update(sql,new MapSqlParameterSource()
+                .addValue("currentLogin", currentLogin)
+                .addValue("login", login));
     }
 
     public void removeFriend(String currentLogin, String friendToRemoveLogin) {
-        String sql = "delete from friendship where user_id = ? and friend_user_id = ?;";
-        // three base requests instead of one, but code is simpler
-        Integer currentUserId = getUserID(currentLogin);
-        Integer friendToRemoveID = getUserID(friendToRemoveLogin);
-        jdbcTemplate.update(sql, currentUserId, friendToRemoveID);
+        String sql = "delete from friendship where user_id = " +
+                "(select user_id from user where login = ?) and friend_user_id = (select user_id from user where login = ?);";
+        jdbcTemplate.update(sql, currentLogin, friendToRemoveLogin);
 
     }
 }

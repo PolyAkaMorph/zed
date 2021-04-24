@@ -26,6 +26,7 @@ public class RegistrationInfo {
     public Map<String, Object> getPersonInfoAsHashMap() {
         Map<String, Object> map = new HashMap<>();
         map.put("name", this.getName());
+        map.put("password_hash", this.getPassword());
         map.put("surname", this.getSurname());
         map.put("age", this.getAge());
         map.put("sex", this.getSex());
