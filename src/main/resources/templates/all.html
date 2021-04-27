@@ -5,6 +5,12 @@
     <title>All people</title>
 </head>
 <body>
+<p>Search people by name and surname:</p>
+<form th:action="@{/search}" method="post">
+    <div><label> User Name : <input type="text" name="name"/> </label></div>
+    <div><label> User Surname: <input type="text" name="surname"/> </label></div>
+    <div><input type="submit" value="Search"/></div>
+</form>
 <p>Here are all the people:</p>
 <tr th:each="personinfo : ${personinfos}">
     <p>

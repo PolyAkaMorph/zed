@@ -3,6 +3,7 @@ package com.zed.repository;
 import com.zed.dto.PersonInfo;
 import com.zed.dto.RegistrationInfo;
 import com.zed.dto.UserInfo;
+import com.zed.model.Person;
 import org.apache.logging.log4j.util.Strings;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -14,6 +15,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 @Component
@@ -102,10 +104,34 @@ public class PreparedStatement {
                 ), currentLogin, personLogin);
     }
 
+    public List<PersonInfo> getAllSearchedPersons(String currentLogin, String name, String surname) {
+        name = "%" + name.toLowerCase(Locale.ROOT) + "%";
+        surname = "%" + surname.toLowerCase(Locale.ROOT) + "%";
+        String sql = "select u.login, u.name, u.surname, u.age, u.sex, u.interests, u.city " +
+                "from user u " +
+                "where u.login <> ?" +
+                "and u.name like ? " +
+                "and u.surname like ?" +
+                "order by u.user_id " +
+                "LIMIT 100;";//todo remove limit
+        return jdbcTemplate.query(sql,
+                (personInfo, rownum) -> new PersonInfo(
+                        personInfo.getString("login"),
+                        personInfo.getString("name"),
+                        personInfo.getString("surname"),
+                        personInfo.getString("age"),
+                        personInfo.getString("sex"),
+                        personInfo.getString("interests"),
+                        personInfo.getString("city"),
+                        false)
+                ,currentLogin, name, surname);
+    }
+
     public List<PersonInfo> getAllPersons(String currentLogin) {
         String sql = "select u.login, u.name, u.surname, u.age, u.sex, u.interests, u.city " +
                 "from user u " +
-                "where u.login <> ?;";
+                "where u.login <> ? LIMIT 100;"; //todo remove limit
+
         return jdbcTemplate.query(sql,
                 (personInfo, rownum) -> new PersonInfo(
                         personInfo.getString("login"),

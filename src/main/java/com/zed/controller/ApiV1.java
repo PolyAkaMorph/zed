@@ -88,5 +88,11 @@ public class ApiV1 {
         userService.removeFriend(id);
         return "redirect:/fellow?id=" + id;
     }
+
+    @PostMapping("/search")
+    public String search(@RequestParam String name, @RequestParam String surname, Model model) {
+        model.addAttribute("personinfos", userService.getAllSearchedPersons(name, surname));
+        return "all";
+    }
 }
 

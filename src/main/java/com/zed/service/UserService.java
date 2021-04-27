@@ -82,4 +82,8 @@ public class UserService {
     public void removeFriend(String friendToRemoveLogin) {
         preparedStatement.removeFriend(securityService.getCurrentLogin(),friendToRemoveLogin);
     }
+
+    public List<PersonInfo> getAllSearchedPersons(String name, String surname) {
+        return preparedStatement.getAllSearchedPersons(securityService.getCurrentLogin(), name,surname);
+    }
 }
