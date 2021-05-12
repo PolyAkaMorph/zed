@@ -22,6 +22,7 @@ public class ApiV1 {
 
     @GetMapping("/mypage")
     public String getMyPage(Model model) {
+        log.info("My page request");
         model.addAttribute("personinfo", userService.getCurrentPerson());
         return "mypage";
     }
@@ -61,6 +62,7 @@ public class ApiV1 {
 
     @GetMapping("/all")
     public String getAll(Model model) {
+        log.info("All page request");
         model.addAttribute("personinfos", userService.getAllPersons());
         return "all";
     }

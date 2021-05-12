@@ -105,15 +105,15 @@ public class PreparedStatement {
     }
 
     public List<PersonInfo> getAllSearchedPersons(String currentLogin, String name, String surname) {
-        name = "%" + name.toLowerCase(Locale.ROOT) + "%";
-        surname = "%" + surname.toLowerCase(Locale.ROOT) + "%";
+        name = name + "%";
+        surname = surname + "%";
         String sql = "select u.login, u.name, u.surname, u.age, u.sex, u.interests, u.city " +
                 "from user u " +
                 "where u.login <> ?" +
                 "and u.name like ? " +
                 "and u.surname like ?" +
-                "order by u.user_id " +
-                "LIMIT 100;";//todo remove limit
+                "order by u.user_id ";
+
         return jdbcTemplate.query(sql,
                 (personInfo, rownum) -> new PersonInfo(
                         personInfo.getString("login"),
