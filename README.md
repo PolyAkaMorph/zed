@@ -7,6 +7,6 @@ Check documentation,
 here are some [analytics](doc/analytics.txt),
 here are some [SQL](doc/sql.txt)
 
-App using env variables - SPRING_DATASOURCE_URL (CLEARDB_DATABASE_URL on Heroku)
+Here are results of [load testing](loadtesting/loadtests.md)
 
-LoadTesting results could be find in /loadtesting dir
+App using env variables - SPRING_DATASOURCE_URL (CLEARDB_DATABASE_URL on Heroku)
