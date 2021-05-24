@@ -25,13 +25,20 @@ With 1000 threads things go bad and there are some 500 and 403 errors:
 
 Second step, adding index. 
 
-create index user_name_idx on user (name, surname);
+We have two fields, name and surname, lets check theirs selectivity:
 
-create index user_surname_idx on user (surname,name);
+select count(distinct name) from user; --102
 
-I have to use two indexes instead of one composite or two single indexes because of various SQL's. If I make two single indexes - only one of them will work, so plan will be worse. If I make only one composite index - it will be useless if SQL have only one field.
+select count(distinct surname) from user; --168957
+
+Surname is much more selective, so it will be in first order:
+
+create index user_surname_name_idx on user (surname, name);
 
 Explain plan with index - Index range scan on use, cost = 2.
+
+There is no need in index user_name_idx, which will handle situation with surname=null, because both fields are required. 
+
 
 
 1 thread, ~2ms timeout
